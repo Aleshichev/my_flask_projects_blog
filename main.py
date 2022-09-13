@@ -38,11 +38,12 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    # идентификатор пользователя, который зашёл
+    """The function creates an identifier for the user who logged in"""
     return User.query.get(int(user_id))
 
 
 class User(UserMixin, db.Model):
+    """This class creates a table with user information in the database"""
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
@@ -53,6 +54,7 @@ class User(UserMixin, db.Model):
 
 
 class BlogPost(db.Model):
+    """This class creates a table with posts information in the database"""
     __tablename__ = "blog_posts"
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
@@ -69,6 +71,7 @@ class BlogPost(db.Model):
 
 
 class Comment(db.Model):
+    """This class creates a table of comments in the database"""
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
@@ -80,11 +83,11 @@ class Comment(db.Model):
     parent_post = relationship("BlogPost", back_populates="comments")
 
 
-db.create_all()
+# db.create_all()
 
 
 def admin_only(f):
-    # decorator check if id is not 1 then return abort with 403 error
+    """decorator check if id is not 1 then return abort with 403 error """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if current_user.id != 1:
@@ -95,6 +98,7 @@ def admin_only(f):
 
 
 def send_emails(username, email, phone_number, message):
+    """The function sends a message to the site administrator"""
     with smtplib.SMTP("outlook.office365.com") as connection:
         connection.starttls()
         connection.login(user=MY_EMAIL, password=PASSWORD)
@@ -105,16 +109,16 @@ def send_emails(username, email, phone_number, message):
         )
 
 
-# blog_url = "https://api.npoint.io/c790b4d5cab58020d391"
-# all_posts = requests.get(blog_url).json()
 
 @app.route('/')
 def home():
+    """The function is responsible for displaying the home page index.htm"""
     posts = BlogPost.query.all()
     return render_template("index.html", all_posts=posts, current_user=current_user)
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
+    """The function is responsible for user registration """
     form = RegisterForm()
     if form.validate_on_submit():
         if User.query.filter_by(email=request.form.get('email')).first():
@@ -142,6 +146,7 @@ def register():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    """The function is responsible for user authentication"""
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -166,6 +171,7 @@ def login():
 
 @app.route('/post/<int:index>', methods=["GET", "POST"])
 def post(index):
+    """The function is responsible for displaying the individual post"""
     form = CommentForm()
     requested_post = BlogPost.query.get(index)
     if form.validate_on_submit():
@@ -187,6 +193,7 @@ def post(index):
 @app.route("/new-post", methods=["GET", "POST"])
 @admin_only
 def add_new_post():
+    """The function is responsible for adding new posts"""
     form = CreatePostForm()
     if form.validate_on_submit():
         new_post = BlogPost(
@@ -208,6 +215,7 @@ def add_new_post():
 @app.route('/edit-post/<post_id>', methods=["GET", "POST"])
 @admin_only
 def edit_post(post_id):
+    """The function is responsible for editing post information"""
     post = BlogPost.query.get(post_id)
     edit_form = CreatePostForm(
         title=post.title,
@@ -229,11 +237,13 @@ def edit_post(post_id):
 
 @app.route('/about')
 def about():
+    """The function is responsible for displaying information about the author"""
     return render_template("about.html", current_user=current_user)
 
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
+    """The function is responsible for communicating with the author via e-mail"""
     if request.method == 'POST':
         data = request.form
         send_emails( data['username'], data['email'], data['phone_number'], data['message'] )
@@ -244,6 +254,7 @@ def contact():
 @app.route('/delete/<int:post_id>')
 @admin_only
 def delete_post(post_id):
+    """The function is responsible for removing unnecessary posts"""
     post_to_delete = BlogPost.query.get(post_id)
     db.session.delete(post_to_delete)
     db.session.commit()
@@ -251,6 +262,7 @@ def delete_post(post_id):
 
 @app.route('/logout')
 def logout():
+    """The function is responsible for user output """
     logout_user()
     return redirect(url_for('home'))
 
