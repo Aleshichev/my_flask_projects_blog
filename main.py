@@ -20,14 +20,14 @@ MY_EMAIL = os.environ.get('own_email')
 PASSWORD = os.environ.get('own_password')
 own_email = 'aleshichevigor@yahoo.com'
 
-
+#Create app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 ckeditor = CKEditor(app)
 Bootstrap(app)
 gravatar = Gravatar(app, size=40, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 
-##CONNECT TO DB
+##Connect to DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -35,6 +35,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -108,7 +109,7 @@ def send_emails(username, email, phone_number, message):
             msg=f"Subject:Hi \n\nName: {username}\nEmail: {email}\nPhone: {phone_number}\nMessage:{message}".encode('utf-8')
         )
 
-
+#-----------------The basic logic of the functioning of site pages------------------------------
 
 @app.route('/')
 def home():
