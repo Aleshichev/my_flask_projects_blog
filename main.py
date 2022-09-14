@@ -16,9 +16,9 @@ from flask_gravatar import Gravatar
 
 
 # ----------  email   -------------------
-MY_EMAIL = os.environ.get('own_email')  #own_email=aleshichevigor@outlook.com
-PASSWORD = os.environ.get('own_password')   #'45rhfy7853rt' own_password=45rhfy7853rt
-own_email = 'aleshichevigor@yahoo.com'  # baVZKzXntWYGnj3
+MY_EMAIL = os.environ.get('own_email')
+PASSWORD = os.environ.get('own_password')
+own_email = 'aleshichevigor@yahoo.com'
 
 
 app = Flask(__name__)
