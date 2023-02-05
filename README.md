@@ -1,7 +1,7 @@
 # Blog pet projects
 ## (Flask project)
 ### Сайт развёрнут на платформе Pythonanywhere http://aleshichev.pythonanywhere.com/
-### Сайт был развёрнут на платформе Heroku https://my-flask-projects-blog.herokuapp.com/
+###№№ Сайт был развёрнут на платформе Heroku https://my-flask-projects-blog.herokuapp.com/
 Блог личных проектов, который имеет форму регистрации и работает в режимах:
 - **администратор** (может просматривать, создавать, редактировать, удалять статьи)
 - **зарегистрированный пользователь** (может просматривать статьи и писать комментарии к ним)
