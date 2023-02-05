@@ -1,4 +1,4 @@
-# Blog pet projects
+# Blog flask
 ## (Flask project)
 ### Сайт развёрнут на платформе Pythonanywhere http://aleshichev.pythonanywhere.com/
 ##### Сайт был развёрнут на платформе Heroku https://my-flask-projects-blog.herokuapp.com/
