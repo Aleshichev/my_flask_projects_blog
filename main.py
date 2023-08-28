@@ -1,22 +1,20 @@
 import os
 import smtplib
-import requests
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import desc
-from flask_ckeditor import CKEditor, CKEditorField
+from flask_ckeditor import CKEditor
 from flask_bootstrap import Bootstrap
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from flask import abort
+from dotenv import load_dotenv
 from forms import *
 from datetime import date
 from flask_login import (
     UserMixin,
     login_user,
     LoginManager,
-    login_required,
     current_user,
     logout_user,
 )
@@ -30,7 +28,8 @@ own_email = "aleshichevigor@yahoo.com"
 
 # Create app
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "8BYkEfBA6O6donzWlSihBXox7C0sKR6b"
+load_dotenv()
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 ckeditor = CKEditor(app)
 Bootstrap(app)
 gravatar = Gravatar(
@@ -140,7 +139,7 @@ def send_emails(username, email, phone_number, message):
 @app.route("/")
 def home():
     """The function is responsible for displaying the home page index.htm"""
-    posts = BlogPost.query.order_by(desc(BlogPost.date)).all()
+    posts = BlogPost.query.order_by(BlogPost.date).all()
     # posts = BlogPost.query.all()
     return render_template("index.html", all_posts=posts, current_user=current_user)
 
