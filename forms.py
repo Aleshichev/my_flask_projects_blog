@@ -18,7 +18,7 @@ class CreatePostForm(FlaskForm):
 class RegisterForm(FlaskForm):
     """This class creates form for users registration information"""
 
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     password = StringField("Password", validators=[DataRequired(), Length(min=8)])
     name = StringField("Name", validators=[DataRequired()])
     submit = SubmitField("SIGN ME UP!")
@@ -27,7 +27,7 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
     """This class creates form for users information"""
 
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("LET ME IN!")
 

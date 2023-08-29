@@ -1,15 +1,12 @@
 import os
-import smtplib
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_ckeditor import CKEditor
 from flask_bootstrap import Bootstrap
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
-from functools import wraps
-from flask import abort
 from dotenv import load_dotenv
-from forms import *
+from forms import RegisterForm, CommentForm, LoginForm, CreatePostForm
 from datetime import date
 from flask_login import (
     UserMixin,
@@ -19,12 +16,7 @@ from flask_login import (
     logout_user,
 )
 from flask_gravatar import Gravatar
-
-
-# ----------  email   -------------------
-MY_EMAIL = os.environ.get("own_email")
-PASSWORD = os.environ.get("own_password")
-own_email = "aleshichevigor@yahoo.com"
+from utils import send_emails, admin_only
 
 # Create app
 app = Flask(__name__)
@@ -105,34 +97,6 @@ class Comment(db.Model):
 
 # db.create_all()
 
-
-def admin_only(f):
-    """decorator check if id is not 1 then return abort with 403 error"""
-
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if current_user.id != 1:
-            return abort(403)
-        # Otherwise continue with the route function
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
-def send_emails(username, email, phone_number, message):
-    """The function sends a message to the site administrator"""
-    with smtplib.SMTP("outlook.office365.com") as connection:
-        connection.starttls()
-        connection.login(user=MY_EMAIL, password=PASSWORD)
-        connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=own_email,
-            msg=f"Subject:Hi \n\nName: {username}\nEmail: {email}\nPhone: {phone_number}\nMessage:{message}".encode(
-                "utf-8"
-            ),
-        )
-
-
 # -----------------The basic logic of the functioning of site pages------------------------------
 
 
@@ -140,7 +104,6 @@ def send_emails(username, email, phone_number, message):
 def home():
     """The function is responsible for displaying the home page index.htm"""
     posts = BlogPost.query.order_by(BlogPost.date).all()
-    # posts = BlogPost.query.all()
     return render_template("index.html", all_posts=posts, current_user=current_user)
 
 
