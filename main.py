@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from forms import RegisterForm, CommentForm, LoginForm, CreatePostForm
 from datetime import date
+from sqlalchemy import desc
 from flask_login import (
     UserMixin,
     login_user,
@@ -74,10 +75,10 @@ class BlogPost(db.Model):
 
     title = db.Column(db.String(250), unique=True, nullable=False)
     subtitle = db.Column(db.String(250), nullable=False)
-    date = db.Column(db.String(250), nullable=False)
+    date = db.Column(db.Date, nullable=False, default=date.today)
     body = db.Column(db.Text, nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
-
+    
     comments = relationship("Comment", back_populates="parent_post")
 
 
@@ -103,7 +104,7 @@ class Comment(db.Model):
 @app.route("/")
 def home():
     """The function is responsible for displaying the home page index.htm"""
-    posts = BlogPost.query.order_by(BlogPost.date).all()
+    posts = BlogPost.query.order_by(desc(BlogPost.date)).all()
     return render_template("index.html", all_posts=posts, current_user=current_user)
 
 
@@ -192,7 +193,6 @@ def add_new_post():
             body=form.body.data,
             img_url=form.img_url.data,
             author=current_user,
-            date=date.today().strftime("%B %d, %Y"),
         )
         db.session.add(new_post)
         db.session.commit()
