@@ -1,46 +1,41 @@
 # Blog flask
 ## (Flask project)
-### Сайт развёрнут на платформе Pythonanywhere http://aleshichev.pythonanywhere.com/
-##### Сайт был развёрнут на платформе Heroku https://my-flask-projects-blog.herokuapp.com/
-Блог личных проектов, который имеет форму регистрации и работает в режимах:
-- **администратор** (может просматривать, создавать, редактировать, удалять статьи)
-- **зарегистрированный пользователь** (может просматривать статьи и писать комментарии к ним)
-- **обычный пользователь** (может только просматривать статьи).
+### The site is deployed on the platform Pythonanywhere http://aleshichev.pythonanywhere.com/
+##### The site was deployed on the platform Heroku https://my-flask-projects-blog.herokuapp.com/
+Blog of personal projects, which has a registration form and works in modes:
+- **administrator** (can view, create, edit, delete articles)
+- **registered user** (can view articles and write comments on them)
+- **regular user** (can only view articles).
 
-На странице **main page (home)** отображается список проектов. На странице **register** расположена форма регистрации. На странице **login**– форма аутентификации. На странице **about** – описание об авторе сайта. На странице **contact** расположена форма отправки **email** на мою почту. Каждая статья отображается на отдельной странице и имеет **форму для записи комментариев**, которые отображаются под этой формой. В **“футере”** находятся ссылки на мой linkedin и githab. 
-К сайту подключена **SQLite** база данных.
+On the **main** page project list is displayed. On the page **register** you will find the registration form. On the **login** page is the authentication form. In the **about** page is a description about the author of the site. On the **contact** page there is a form to send **email** to my inbox.  Each article is displayed on a separate page and has a **form for writing comments**, which are displayed below that form. In the **footer** are links to my linkedin and githab. 
+The site is connected to a **SQLite** database.
 
-## Используемые ресурсы
--	Шаблон **Bootstrap**
--	**Sqlite**
--	**Flask** 
-## Модули и библиотеки:
+## Resources:
+- Template **Bootstrap**
+- **Sqlite**
+- **Flask** 
+## Modules and libraries:
 **smtplib, os, date, flask_login, SQLAlchemy, CKEditor, WTForms, request, wraps, flask_gravatar, flask_bootstrap, werkzeug.security**
  
-## Структура проекта
-На основе **Фреймворка Flask** и шаблона **Bootstrap** создана модель отображения структуры проекта:
-1.	Папка **static** - содержит стили **Css, Js и картинки** отображаемые на страницах сайта
-2.	Папка **templates** - содержит шаблоны **HTML** страниц сайта
-3.	Файл **main.py** – содержит основной код программы. (Описание ниже)
-4.	Файл **forms.py** – содержит  4 класса, на основе которых создано 4 формы для заполнения данных **PostForm, RegisterForm, LoginForm, CommentForm**.
-5.	Файл **posts.db** – **Sqlite** база данных, которая содержит 3 таблицы данных: **User, BlogPost, Comment**.
-6.	Файл **Procfile** – содержит сообщение для запуска процессов на **Heroku**
-7.	Файл **requirements.txt** – имеет список используемых версий модулей и библиотек в проекте.
+## Project Structure
+Based on the **Flask** framework and the **Bootstrap** template, a project structure mapping model has been created:
+1.	Folder **static** - contains styles **Css, Js and images** displayed on the pages of the site
+2.	Folder **templates** - contains **HTML** templates of the site pages
+3.	File **main.py** - contains the main code of the programme. (Description below)
+4.	File **forms.py** - contains 4 classes, on the basis of which 4 forms for data filling **PostForm, RegisterForm, LoginForm, CommentForm** are created.
+5.	File **posts.db** - **Sqlite** database which contains 3 data tables: **User, BlogPost, Comment**.
+6.	The **Procfile** file - contains the message to run processes on **Heroku**
+7.	File **requirements.txt** - has a list of used versions of modules and libraries in the project.
 
 ## Main.py 
-Вначале файл находится блок импорта необходимых модулей, библиотек и пакетов, используемых в проекте.  Затем - блок констант данных, которые используются в функции **def send_emails()** для отправки почты. Далее – блок создания **приложения Flask** и подключения всех дополнительных компонентов в приложение **CKEditor, Bootstrap, Gravatar, SQLAlchemy, LoginManager**. Затем представлена функция **def load_user()**, которая идентифицирует зарегистрированного пользователя. Далее идут 3 класса **User, BlogPost, Comment**, которые создают 3 соответствующие таблицы в базе данных (файл **posts.db** ). Затем представлена функция-декоратор **def admin_only()**, которая определяет администратора. За ней – функция **def send_email**, которая отвечает за отправку сообщения на почту администратора. 
-#### Затем идёт основная логика функционирование и отображения страниц сайта:
-- **def home()** - главная страница. Отображает список всех статей. Возвращает шаблон **index.html**
-- **def register()** - страница регистрации. Отображает форму регистрации шаблон **register.html**. Если форма заполнена правильно перенаправляет пользователя на домашнюю страницу. 
-- **def login()** - страница аутентификации. Отображает форму аутентификации шаблон **login.html**. Проверяет ошибки заполнения формы. Если форма заполнена правильно перенаправляет пользователя на домашнюю страницу. 
-- **def post()** - страница отображения отдельного поста и блока комментариев. Проверяет аутентификацию пользователя (если пользователь не зарегистрирован перенаправляет на страницу **login**). Возвращает шаблон **post.html**.
-- **def add_new_post()** -  страница содержит форму заполнения информации для нового поста. Отображает шаблон **make-post.html**. Если пост создан, перенаправляет на страницу **home**. Только для администратора **@admin_only**.
-- **def edit_post()** - страница отображает форму редактирования информации для нового поста. Отображает шаблон **make-post.html**. Если пост отредактирован, перенаправляет на страницу **post**. Только для администратора **@admin_only**.
-- **def about()** - отображает информацию о администраторе сайта, возвращает шаблон страницы **about.html**.
-- **def contact()** - на странице расположена форма отправки email администратора сайта. Возвращает страницу **contact.html**.
-- **def delete-post()** - функция удаления постов. Перенаправляет пользователя на страницу **home**. Только для администратора **@admin_only**.
-- **def logout()** - функция отвечает за выход пользователя из аутентификации. Перенаправляет пользователя на страницу **home**.
-
-
-
-
+At the beginning of the file is a block of importing necessary modules, libraries and packages used in the project.  Then - a block of data constants that are used in the **def send_emails()** function to send mail. Next is the block of creating a **Flask** application and connecting all the additional components in the application **CKEditor, Bootstrap, Gravatar, SQLAlchemy, LoginManager**. Then the **def load_user()** function is presented, which identifies the logged in user. Next come 3 classes **User, BlogPost, Comment** which create 3 corresponding tables in the database (file **posts.db** ). Then the **def admin_only()** decorator function **def admin_only()** is presented, which defines the administrator. It is followed by the **def send_email** function, which is responsible for sending a message to the administrator's mail. 
+#### Then comes the main logic of functioning and displaying the pages of the site:
+- **def home()** - home page. Displays a list of all articles. Returns **index.html** template
+- **def register()** - registration page. Displays the registration form template **register.html**. If the form is filled out correctly redirects the user to the home page. 
+- **def login()** - authentication page. Displays the authentication form template **login.html**. Checks for errors in filling out the form. If the form is filled out correctly redirects the user to the home page. 
+- **def post()** - page for displaying individual post and comment block. Checks user authentication (if user is not logged in redirects to **login** page). Returns the **post.html** template.
+- **def add_new_post()** - the page contains a form for filling in information for a new post. Displays the **make-post.html** template. If a post is created, redirects to the **home** page. For admin **@admin_only** only.
+- **def edit_post()** - page displays a form for editing information for a new post. Displays the **make-post.html** template. If the post is edited, redirects to the **post** page. For admin **@admin_only** only.
+- **def about()** - displays information about the site administrator, returns the **about.html** page template.
+- **def contact()** - the page contains a form for sending the site administrator's email. Returns the **contact.html** page.only**.
+- **def logout()** - the function is responsible for user logout from authentication. Redirects the user to the **home** page.
